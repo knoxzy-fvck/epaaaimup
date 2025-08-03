@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Animation for Epaaaww</title>
+    <style>
+        body {
+            background-color: #ffebee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .love-container {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+        }
+        
+        .love-text {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff6b8b;
+            transform: rotate(45deg);
+            animation: hearts 4s ease-in-out infinite;
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .heart:before,
+        .heart:after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-color: inherit;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart:before {
+            top: -15px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -15px;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes hearts {
+            0% {
+                transform: rotate(45deg) translateY(0) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotate(45deg) translateY(-200px) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .audio-player {
+            margin-top: 20px;
+            background: rgba(255, 182, 193, 0.7);
+            padding: 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            z-index: 10;
+        }
+        
+        audio {
+            outline: none;
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background-color: #ffc0cb;
+        }
+
+        .audio-error {
+            color: #d32f2f;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* Photo Gallery Styles */
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 800px;
+            z-index: 10;
+        }
+        
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .photo-frame:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .photo-frame:hover img {
+            transform: scale(1.1);
+        }
+        
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .photo-frame:hover .photo-caption {
+            transform: translateY(0);
+        }
+        
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+        }
+        
+        /* Floating Hearts Background */
+        .bg-heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.3);
+            animation: floating 15s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes floating {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Message Box */
+        .message-box {
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 10;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .love-text {
+                font-size: 2rem;
+            }
+            
+            .photo-frame {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="love-container">
+        <div class="love-text">I Love You Epaaaww</div>
+    </div>
+    
+    <!-- Photo Gallery with your specific photos -->
+    <div class="photo-gallery">
+        <div class="photo-frame" onclick="openLightbox('6087160834435433866_120.jpg')">
+            <img src="6087160834435433866_120.jpg" alt="Our Special Moment 1">
+            <div class="photo-caption">Our Beautiful Memory</div>
+        </div>
+        <div class="photo-frame" onclick="openLightbox('6087160834435433864_120.jpg')">
+            <img src="6087160834435433864_120.jpg" alt="Our Special Moment 2">
+            <div class="photo-caption">Together Forever</div>
+        </div>
+        <!-- Add more photos if needed -->
+    </div>
+    
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+        </div>
+    </div>
+    
+    <!-- Message Box -->
+    <div class="message-box">
+        <h2>For My Beloved Epaaaww</h2>
+        <p>Untuk Kamu,Epaa Cewe Aku Yang Paling Camtik. Aku Hanya Ingin Mengatakan Bahwa Aku Mencintaimu Melebih Rasa Cinta Aku Kepada Diri Sendiri.</p>
+        <p>I Still Love You</p>
+        <p style="font-weight: bold; color: #ff6b8b;">By KnoXzy Sayang Epa</p>
+    </div>
+    
+    <div class="audio-player">
+        <audio id="loveAudio" controls autoplay loop>
+            <source src="sound-ad..lyrics_1754208356_musicaldown.com.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div id="audioError" class="audio-error">
+            Audio cannot be played. Please ensure the audio file is available and your browser supports audio playback.
+        </div>
+    </div>
+    
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const container = document.querySelector('.love-container');
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            
+            heart.style.left = Math.random() * 100 + 'px';
+            heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+            
+            const hue = 330 + Math.random() * 30;
+            heart.style.backgroundColor = `hsl(${hue}, 100%, 75%)`;
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }
+        
+        setInterval(createHearts, 300);
+        
+        // Background floating hearts
+        function createBgHearts() {
+            const heart = document.createElement('div');
+            heart.className = 'bg-heart';
+            heart.innerHTML = 'キノ';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (10 + Math.random() * 20) + 's';
+            heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+            heart.style.opacity = Math.random() * 0.5;
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 20000);
+        }
+        
+        setInterval(createBgHearts, 300);
+        
+        // Typing effect for love text
+        const loveText = document.querySelector('.love-text');
+        const originalText = loveText.textContent;
+        loveText.textContent = '';
+        
+        let i = 0;
+        const typingEffect = setInterval(() => {
+            if (i < originalText.length) {
+                loveText.textContent += originalText.charAt(i);
+                i++;
+            } else {
+                clearInterval(typingEffect);
+            }
+        }, 150);
+
+        // Audio handling
+        const audio = document.getElementById('loveAudio');
+        const audioError = document.getElementById('audioError');
+
+        audio.addEventListener('error', function() {
+            audioError.style.display = 'block';
+            console.error('Error playing audio');
+        });
+
+        // Enable audio on first interaction
+        document.body.addEventListener('click', function() {
+            audio.play().catch(e => {
+                audioError.style.display = 'block';
+                audioError.textContent = 'Click/tap the screen to play audio. Some browsers require user interaction first.';
+            });
+        }, { once: true });
+        
+        // Lightbox functionality
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imageSrc;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close lightbox when clicking outside image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+        
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
